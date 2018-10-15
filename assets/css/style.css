@@ -1,0 +1,98 @@
+body {
+  margin: 0;
+  background-color: #000;
+  color: #bbb;
+  font-family: sans-serif;
+}
+
+strong {
+  font-weight: 800;
+  color: #eee;
+}
+
+.nav-bar {
+  height: 100vh;
+  width: 50px;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-dot-wrapper {
+  margin: 5px 0;
+}
+
+.nav-dot {
+  display: block;
+  height: 8px;
+  width: 8px;
+  border-radius: 50px;
+  background-color: #bbb;
+  cursor: pointer;
+}
+
+.nav-dot-radio:checked + .nav-dot {
+  background-color: #eee;
+}
+
+.SKNO-banner {
+  width: 100%;
+  height: 100vh;
+  background-image: url("../img/SKNO+25_final.gif");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.invite {
+  width: 80%;
+  height: 100vh;
+  padding: 50px 0;
+  box-sizing: border-box;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.info {
+  width: 50%;
+  line-height: 1.3em;
+}
+
+.map {
+  width: 400px;
+  height: 100%;
+}
+
+.section{
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 768px){
+  .SKNO-banner {
+    height: 200px;
+  }
+
+  .nav-bar {
+    visibility: hidden;
+  }
+
+  .invite {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .info {
+    width: 100%;
+  }
+
+  .map {
+    width: 100%;
+    height: 300px;
+    margin-top: 20px;
+  }
+}
