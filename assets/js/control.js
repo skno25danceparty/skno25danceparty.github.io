@@ -1,79 +1,58 @@
-var MOBILE_WIDTH = 768;
-var FRAME_RATE = 1/60; //fps
-var ANIMATION_DURATION = 0.3 // time in seconds
+window.addEventListener("load", navDotListener);
 
-var prevYPosition = 0;
+function navDotListener() {
+  var topDot = document.querySelector(".nav-dot-radio#up");
+  var bottomDot = document.querySelector(".nav-dot-radio#down");
 
-window.addEventListener("load", () => {
-  onResize();
+  window.addEventListener("scroll", () => {
+    var top = Math.abs(document.body.getBoundingClientRect().top);
+    var windowHeight = window.innerHeight;
 
-  var navDotRadio = document.querySelectorAll(".nav-dot-radio");
-  Array.prototype.forEach.call(navDotRadio, (radio) => {
-    radio.addEventListener("click", () => {
-      var id = radio.getAttribute("id");
-      if (id === "up") {
-        scrollToYPosition(window.innerHeight, 0);
-      } else {
-        scrollToYPosition(0, window.innerHeight);
-      }
-    });
+    if (top >= 3 * windowHeight / 4) {
+      bottomDot.checked = true;
+    } else {
+      topDot.checked = true;
+    }
+
   });
 
-});
+  topDot.addEventListener("click", () => {
+    documentScroll(Math.abs(document.body.getBoundingClientRect().top), 0);
+  });
 
-window.addEventListener("resize", onResize);
-
-function onResize() {
-  scrollToYPosition(0, 0);
-  if (window.innerWidth > MOBILE_WIDTH) {
-    window.addEventListener("scroll", autoScroll);
-  } else {
-    window.removeEventListener("scroll", autoScroll);
-  }
+  bottomDot.addEventListener("click", () => {
+    documentScroll(Math.abs(document.body.getBoundingClientRect().top), window.innerHeight);
+  })
 }
 
-function autoScroll() {
-    var topDot = document.querySelector(".nav-dot-radio#up");
-    var bottomDot = document.querySelector(".nav-dot-radio#down");
-    if (!topDot || !bottomDot) {
-      return;
-    }
-    var currYPosition = document.body.getBoundingClientRect().top;
+function documentScroll(from, to) {
 
-    if (currYPosition - prevYPosition > 0) {
-      checkRadio(topDot);
-      scrollToYPosition(window.innerHeight, 0);
-    } else {
-      checkRadio(bottomDot);
-      scrollToYPosition(0, window.innerHeight);
-    }
-    prevYPosition = currYPosition;
+  var currentIteration = 0;
+  var distance = to - from;
+
+  /**
+   * get total iterations
+   * 60 -> requestAnimationFrame 60/second
+   * second parameter -> time in seconds for the animation
+   **/
+  var animIterations = Math.round(60 * 0.3);
+
+  (function scroll() {
+      var value = easeOutCubic(currentIteration, from, distance, animIterations);
+      window.scrollTo(0, value);
+      currentIteration++;
+      if (currentIteration < animIterations) {
+          requestAnimationFrame(scroll);
+      }
+  })();
+
+
 }
 
-function checkRadio(radioElem) {
-  if (!radioElem) {
-    return;
-  }
-  radioElem.checked = true;
+//example easing functions
+function linearEase(currentIteration, startValue, changeInValue, totalIterations) {
+  return changeInValue * currentIteration / totalIterations + startValue;
 }
-
-function scrollToYPosition(startY, endY) {
-    // var distance = endY - startY;
-    // var time = 0;
-    //
-    // function smoothScroll() {
-    //   time = time + FRAME_RATE;
-    //   var progress = (time) / ANIMATION_DURATION;
-    //
-    //   if (progress < 1) {
-    //     window.scrollTo(0, startY + (progress * distance));
-    //     window.requestAnimationFrame(smoothScroll);
-    //   } else {
-    //     window.scrollTo(0, endY);
-    //   }
-    // }
-    //
-    // window.requestAnimationFrame(smoothScroll);
-
-    window.scrollTo(0, endY);
+function easeOutCubic(currentIteration, startValue, changeInValue, totalIterations) {
+  return changeInValue * (Math.pow(currentIteration / totalIterations - 1, 3) + 1) + startValue;
 }
